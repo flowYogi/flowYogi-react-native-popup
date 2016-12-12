@@ -1,5 +1,5 @@
 {
-  "name": "react-native-popup",
+  "name": "@flowYogi/react-native-popup",
   "version": "0.6.1",
   "description": "popup for react-native",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/beefe/react-native-popup.git"
+    "url": "git+https://github.com/flowYogi/react-native-popup.git"
   },
   "keywords": [
     "react-native",
@@ -23,7 +23,7 @@
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/beefe/react-native-popup/issues"
+    "url": "https://github.com/flowYogi/react-native-popup/issues"
   },
-  "homepage": "https://github.com/beefe/react-native-popup#readme"
+  "homepage": "https://github.com/flowYogi/react-native-popup#readme"
 }
