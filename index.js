@@ -21,6 +21,7 @@ import {
 class PopContent extends Component{
 
 	static propTypes = {
+		customStyle: PropTypes.object,
 		title: PropTypes.string,
 		content: PropTypes.oneOfType([ PropTypes.string, PropTypes.number, PropTypes.array, ]),
 		btns: PropTypes.array,
@@ -35,40 +36,40 @@ class PopContent extends Component{
 		let btnNumber = btns.length;
 		return (
 			<View style={styles.tipBox}>
-				{ title && <View style={styles.tipTitleBox}><Text style={styles.tipTitle}>{title}</Text></View>}
-				<View style={styles.tipContentBox}>
-					{(() => {
-						let tipContent = [];
-						if(content instanceof Array){
-							content.forEach((item, index, arr) => {
-								if(index > 9){ 
-									return;
-								}
-								item && ( tipContent[index] = (<Text style={styles.tipContent} key={'tipContent' + index}>{item}</Text>) );
-							});
-						}else{
-							content && ( tipContent[0] = (<Text style={styles.tipContent} key={'tipContent'}>{content}</Text>) );
-						}
-						return tipContent;
-					})()}
-				</View>
-				<View style={styles.line}></View>
-				<View style={[styles.btnBox, btnNumber > 2 ? {flexDirection: 'column',} : {}]}>
-					{(() => {
-						let btnContent = [];
-						btns.forEach((btn, index,) => {
-							btnContent.push(
-								<TouchableOpacity style={styles.btnTextBox} onPress={btn.callback} key={'btnTextBox' + index}>
-									<Text style={[styles.btnText, btn.style]}>{btn.text}</Text>
-								</TouchableOpacity>
-							);
-							index != btnNumber - 1 && btnContent.push( <View style={styles.btnLine} key={'btnLine' + index} /> );
-						});
-						return btnContent;
-					})()}
-				</View>
-			</View>
+		{ title && <View style={styles.tipTitleBox}><Text style={styles.tipTitle}>{title}</Text></View>}
+	<View style={styles.tipContentBox}>
+		{(() => {
+			let tipContent = [];
+			if(content instanceof Array){
+				content.forEach((item, index, arr) => {
+					if(index > 9){
+					return;
+				}
+				item && ( tipContent[index] = (<Text style={styles.tipContent} key={'tipContent' + index}>{item}</Text>) );
+			});
+			}else{
+				content && ( tipContent[0] = (<Text style={styles.tipContent} key={'tipContent'}>{content}</Text>) );
+			}
+			return tipContent;
+		})()}
+	</View>
+		<View style={styles.line}></View>
+		<View style={[styles.btnBox, btnNumber > 2 ? {flexDirection: 'column',} : {}]}>
+		{(() => {
+			let btnContent = [];
+			btns.forEach((btn, index,) => {
+				btnContent.push(
+			<TouchableOpacity style={styles.btnTextBox} onPress={btn.callback} key={'btnTextBox' + index}>
+			<Text style={[styles.btnText, btn.style]}>{btn.text}</Text>
+		</TouchableOpacity>
 		);
+			index != btnNumber - 1 && btnContent.push( <View style={styles.btnLine} key={'btnLine' + index} /> );
+		});
+			return btnContent;
+		})()}
+	</View>
+		</View>
+	);
 	}
 
 };
@@ -81,63 +82,63 @@ class DisplayPopup extends Component{
 		btns: [{
 			text: 'ok',
 			callback: () => {},
-		}],
+	}],
+};
+
+constructor(props, context) {
+
+	super(props, context);
+
+	this.state = {
+		isVisible: true,
 	};
 
-	constructor(props, context) {
+}
 
-		super(props, context);
+close() {
+	this.setState({
+		isVisible: false,
+	});
+}
 
-		this.state = {
-			isVisible: true,
-		};
-
+_renderOverlay() {
+	if(this.props.isOverlay) {
+		return (
+			<TouchableWithoutFeedback onPress={() => {
+			if(this.props.isOverlayClickClose) {
+				this.close();
+			}
+		}}>
+	<View style={styles.overlay}></View>
+		</TouchableWithoutFeedback>
+	);
 	}
+}
 
-	close() {
-		this.setState({
-			isVisible: false,
-		});
-	}
-
-	_renderOverlay() {
-		if(this.props.isOverlay) {
-			return (
-				<TouchableWithoutFeedback onPress={() => {
-					if(this.props.isOverlayClickClose) {
-						this.close();
-					}
-				}}>
-					<View style={styles.overlay}></View>
-				</TouchableWithoutFeedback>
-			);
-		}
-	}
-
-	render() {
-		let { isVisible, isOverlay, } = this.state;
-		let { title, content, btns, } = this.props;
-		btns = btns.map((item) => {
+render() {
+	let { isVisible, isOverlay, } = this.state;
+	let { title, content, btns, } = this.props;
+	btns = btns.map((item) => {
 			return {
 				text: item.text,
 				callback: () => {
-					typeof item.callback === 'function' && item.callback();
-					this.close();
-				},
-			};
-		});
-		if(isVisible) {
-			return (
-				<View style={styles.popupContainer}>
-					{this._renderOverlay()}
-					<View style={styles.tipBoxView}>
-						<PopContent title={title} content={content} btns={btns} />
-					</View>
-				</View>
-			);
-		}
-		return <View style={styles.hidden}/>;
+				typeof item.callback === 'function' && item.callback();
+	this.close();
+},
+};
+});
+	if(isVisible) {
+		return (
+			<View style={styles.popupContainer}>
+		{this._renderOverlay()}
+	<View style={styles.tipBoxView}>
+	<PopContent title={title} content={content} btns={btns} />
+			</View>
+			</View>
+	);
 	}
+	return <View style={styles.hidden}/>;
+}
 
 };
 
@@ -166,112 +167,111 @@ export default class Popup extends Component{
 	_pop(args) {
 		this.setState({
 			content: ( <PopContent {...args}/> ),
-			isVisible: true,
-		});
+		isVisible: true,
+	});
 	}
 
 	alert(...text) {
-		text = text.map(text => text);
-		this._pop({
-			content: text || '',
-			btns: [{
-				text: 'OK',
+	text = text.map(text => text);
+	this._pop({
+		content: text || '',
+	btns: [{
+		text: 'OK',
+		callback: () => {
+		this.close();
+},
+}],
+});
+}
+
+tip(args) {
+	let {title, content, btn,} = args;
+	this._pop({
+		title: title || 'Tip',
+		content: content,
+		btns: [{
+			text: btn && btn.text || 'OK',
+			style: btn && btn.style,
+			callback: () => {
+			this.close();
+	btn && typeof btn.callback === 'function' && btn.callback();
+},
+}],
+});
+}
+
+confirm(args) {
+	let {title, content, ok, cancel,} = args;
+	this._pop({
+		title: args.title,
+		content: args.content,
+		btns: [
+			{
+				text: cancel && cancel.text || 'Cancel',
+				style: cancel && cancel.style,
 				callback: () => {
-					this.close();
-				},
-			}],
-		});
-	}
+				this.close();
+	cancel && typeof cancel.callback === 'function' && cancel.callback();
+},
+},
+	{
+		text: ok && ok.text || 'OK',
+			style: ok && ok.style,
+		callback: () => {
+		this.close();
+		ok && typeof ok.callback === 'function' && ok.callback();
+	},
+	},
+],
+});
+}
 
-	tip(args) {
-		let {title, content, btn,} = args;
-		this._pop({
-			title: title || 'Tip',
-			content: content,
-			btns: [{
-				text: btn && btn.text || 'OK',
-				style: btn && btn.style,
-				callback: () => {
-					this.close();
-					btn && typeof btn.callback === 'function' && btn.callback();
-				},
-			}],
-		});
-	}
+pop(args) {
+	this._pop(args);
+}
 
-	confirm(args) {
-		let {title, content, ok, cancel,} = args;
-		this._pop({
-			title: args.title,
-			content: args.content,
-			btns: [
-				{
-					text: cancel && cancel.text || 'Cancel',
-					style: cancel && cancel.style,
-					callback: () => {
-						this.close();
-						cancel && typeof cancel.callback === 'function' && cancel.callback();
-					},
-				},
-				{
-					text: ok && ok.text || 'OK',
-					style: ok && ok.style,
-					callback: () => {
-						this.close();
-						ok && typeof ok.callback === 'function' && ok.callback();
-					},
-				},
-			],
-		});
-	}
+close() {
+	this.setState({
+		isVisible: false,
+	});
+}
 
-	pop(args) {
-		this._pop(args);
-	}
-
-	close() {
-		this.setState({
-			isVisible: false,
-		});
-	}
-
-	_renderOverlay() {
-		if(this.state.isOverlay) {
-			return (
-				<TouchableWithoutFeedback onPress={() => {
-					if(this.state.isOverlayClickClose) {
-						this.close();
-					}
-				}}>
-					<View style={styles.overlay}></View>
-				</TouchableWithoutFeedback>
-			);
-		}
-	}
-
-	_renderContent() {
+_renderOverlay() {
+	if(this.state.isOverlay) {
 		return (
-			<View style={styles.tipBoxView}>
-				{this.state.content}
-			</View>
-		);
+			<TouchableWithoutFeedback onPress={() => {
+			if(this.state.isOverlayClickClose) {
+				this.close();
+			}
+		}}>
+	<View style={styles.overlay}></View>
+		</TouchableWithoutFeedback>
+	);
 	}
+}
 
-	render() {
-		let { isVisible, isOverlay, } = this.state;
-		if(isVisible) {
-			return (
-				<View style={styles.popupContainer}>
-					{this._renderOverlay()}
-					{this._renderContent()}
-				</View>
-			);
-		}
-		return <View style={styles.hidden}/>;
+_renderContent() {
+	return (
+		<View style={styles.tipBoxView}>
+	{this.state.content}
+</View>
+);
+}
+
+render() {
+	let { isVisible, isOverlay, } = this.state;
+	if(isVisible) {
+		return (
+			<View style={[styles.popupContainer,{...this.props.customStyle}]}>
+		{this._renderOverlay()}
+		{this._renderContent()}
+	</View>
+	);
 	}
+	return <View style={styles.hidden}/>;
+}
 
 };
-
 let screen = {
 	pixel: 1 / PixelRatio.get(),
 	...Dimensions.get('window')
@@ -375,15 +375,15 @@ if(Platform.OS === 'ios'){
 	styles = {
 		...styles,
 		tipTitle: {
-			fontSize: 20,
+		fontSize: 20,
 			fontWeight: '500',
 			textAlign: 'center',
-		},
-		tipContent: {
-			fontSize: 16,
+	},
+	tipContent: {
+		fontSize: 16,
 			marginTop: 3,
 			marginBottom: 7,
 			textAlign: 'center',
-		},
-	}
+	},
+}
 }
